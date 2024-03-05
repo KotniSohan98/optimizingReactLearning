@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useCallback } from "react";
+import { Item } from "./components/Item";
+import "./App.css";
 
 function App() {
+  const [itemValues, setItemValues] = useState([
+    { value: "", id: "1" },
+    { value: "", id: "2" },
+    { value: "", id: "3" },
+  ]);
+  const changeValue = useCallback((id, value) => {
+    setItemValues((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === id) {
+          item.value = value;
+        }
+        return item;
+      })
+    );
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Parent holds the state and passes it to items.</h1>
+        <p className="App-header-output">{JSON.stringify(itemValues)}</p>
       </header>
+      <div className="App-items">
+        {itemValues.map((itemValue) => {
+          return (
+            <Item
+              key={itemValue.id}
+              id={itemValue.id}
+              value={itemValue.value}
+              onChange={changeValue}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
